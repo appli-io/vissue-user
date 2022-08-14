@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { UserService }            from '../service/user.service';
-import { MessagePattern }         from '@nestjs/microservices';
-import { User }                   from '../entity/user.entity';
-import { FindOneOptions }         from 'typeorm';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { UserService }                            from '../service/user.service';
+import { MessagePattern }                    from '@nestjs/microservices';
+import { User }                              from '../entity/user.entity';
+import { FindOneOptions }                    from 'typeorm';
+import { AuthGuard }                         from '../guard/auth.guard';
 
 @Controller()
 export class UserController {
@@ -19,5 +20,11 @@ export class UserController {
   createUser(@Body() data: User): Promise<any> {
     console.log(data);
     return this.userService.createUser(data as User);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('greet')
+  async greet(): Promise<string> {
+    return 'Greetings authenticated user';
   }
 }
