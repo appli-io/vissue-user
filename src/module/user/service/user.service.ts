@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository }                         from '@nestjs/typeorm';
-import { User }                                     from '../entity/user.entity';
+import { InjectRepository }   from '@nestjs/typeorm';
+
+import { User } from '../entity/user.entity';
+
 import { FindOneOptions, InsertResult, Repository } from 'typeorm';
 
 @Injectable()

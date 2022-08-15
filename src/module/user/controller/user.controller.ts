@@ -1,9 +1,11 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { UserService }                            from '../service/user.service';
-import { MessagePattern }                    from '@nestjs/microservices';
-import { User }                              from '../entity/user.entity';
-import { FindOneOptions }                    from 'typeorm';
-import { AuthGuard }                         from '../guard/auth.guard';
+import { MessagePattern }                         from '@nestjs/microservices';
+
+import { User }        from '../entity/user.entity';
+import { AuthGuard }   from '../guard/auth.guard';
+import { UserService } from '../service/user.service';
+
+import { FindOneOptions } from 'typeorm';
 
 @Controller()
 export class UserController {

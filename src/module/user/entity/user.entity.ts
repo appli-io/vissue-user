@@ -1,7 +1,8 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
-import { IsEmail, Min }                                                                                     from 'class-validator';
-import { hash }          from 'bcrypt';
 import { UserInterface } from '../interface/user.interface';
+
+import { hash }                                                                                             from 'bcrypt';
+import { IsEmail, Min }                                                                                     from 'class-validator';
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 
 @Entity('user')
 @Unique(['email'])
@@ -19,6 +20,9 @@ export class User implements UserInterface {
   @Column()
   @IsEmail()
   email: string;
+
+  @Column({nullable: true})
+  lastLogin?: Date;
 
   @CreateDateColumn()
   createdAt: Date;

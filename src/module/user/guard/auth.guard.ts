@@ -1,6 +1,7 @@
-import { lastValueFrom, timeout }                        from 'rxjs';
 import { CanActivate, ExecutionContext, Inject, Logger } from '@nestjs/common';
 import { ClientProxy }                                   from '@nestjs/microservices';
+
+import { lastValueFrom, timeout } from 'rxjs';
 
 export class AuthGuard implements CanActivate {
   constructor(
