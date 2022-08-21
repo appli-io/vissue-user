@@ -10,6 +10,7 @@ import { RepositoriesModule }      from '@infrastructure/repositories/repositori
 
 import { UserModule }    from './module/user/user.module';
 import { AppController } from './app.controller';
+import { DomainModule }  from '@domain/domain.module';
 import { AppService }    from './app.service';
 
 const envFilePath: string = getEnvPath(`${ __dirname }/envs`);
@@ -17,22 +18,13 @@ const envFilePath: string = getEnvPath(`${ __dirname }/envs`);
 @Module({
   imports: [
     ConfigModule.forRoot({envFilePath, isGlobal: true}),
-    /*TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'user',
-      password: 'user-pass',
-      database: 'ms-user',
-      synchronize: true,
-      entities: [User]
-    }),*/
     EnvironmentConfigModule,
     TypeOrmConfigModule,
     LoggerModule,
     ExceptionsModule,
     RepositoriesModule,
-    UserModule
+    UserModule,
+    DomainModule
   ],
   controllers: [AppController],
   providers: [AppService],

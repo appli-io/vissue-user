@@ -1,12 +1,12 @@
-import { UserInterface } from '../interface/user.interface';
+import { UserInterface } from '../../module/user/interface/user.interface';
 
 import { hash }                                                                                             from 'bcrypt';
-import { IsEmail, Min }                                                                                     from 'class-validator';
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
+import { IsEmail, Min }                                                                                                 from 'class-validator';
+import { BaseEntity, BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 
 @Entity('user')
 @Unique(['email'])
-export class User implements UserInterface {
+export class User extends BaseEntity implements UserInterface {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 

@@ -3,7 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule }            from '@nestjs/typeorm';
 
 import { UserController } from './controller/user.controller';
-import { User }           from './entity/user.entity';
+import { User }           from '@domain/entity/user.entity';
 import { UserService }    from './service/user.service';
 
 @Module({

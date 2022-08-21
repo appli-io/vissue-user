@@ -1,0 +1,36 @@
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { LoggerService }                                              from '@infrastructure/logger/logger.service';
+import { tap }                                                        from 'rxjs';
+
+@Injectable()
+export class LoggerInterceptor implements NestInterceptor {
+  constructor(private readonly logger: LoggerService) {}
+
+  intercept(context: ExecutionContext, next: CallHandler): any {
+    const now = Date.now();
+    const httpContext = context.switchToHttp();
+    const request = httpContext.getRequest();
+
+    const ip = LoggerInterceptor.getIP(request);
+
+    this.logger.log(`Incoming Request on ${ request.path }`, `method=${ request.method } ip=${ ip }`);
+
+    return next.handle().pipe(
+      tap(() => {
+          this.logger.log(`Outgoing Response on ${ request.path }`, `method=${ request.method } ip=${ ip } duration=${ Date.now() - now }ms`);
+        }
+      ));
+  }
+
+  private static getIP(request: any): string {
+    let ip: string;
+    const ipAddr = request.headers['x-forwarded-for'];
+    if (ipAddr) {
+      const list = ipAddr.split(',');
+      ip = list[list.length - 1];
+    } else {
+      ip = request.connection.remoteAddress;
+    }
+    return ip.replace('::ffff:', '');
+  }
+}

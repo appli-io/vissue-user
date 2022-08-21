@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { MessagePattern }                         from '@nestjs/microservices';
 
-import { User }        from '../entity/user.entity';
-import { AuthGuard }   from '../guard/auth.guard';
+import { User }        from '@domain/entity/user.entity';
+import { AuthGuard }   from '@infrastructure/common/guards/auth.guard';
 import { UserService } from '../service/user.service';
 
 import { FindOneOptions } from 'typeorm';
