@@ -1,4 +1,4 @@
-import { UserInterface } from '../../module/user/interface/user.interface';
+import { UserInterface } from '../interfaces/user.interface';
 
 import { hash }                                                                                             from 'bcrypt';
 import { IsEmail, Min }                                                                                                 from 'class-validator';
@@ -14,15 +14,12 @@ export class User extends BaseEntity implements UserInterface {
   @Min(8)
   password: string;
 
-  @Column()
+  @Column({nullable: false})
   name: string;
 
-  @Column()
+  @Column({nullable: false})
   @IsEmail()
   email: string;
-
-  @Column({nullable: true})
-  lastLogin?: Date;
 
   @CreateDateColumn()
   createdAt: Date;

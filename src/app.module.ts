@@ -8,9 +8,10 @@ import { getEnvPath }              from '@infrastructure/helpers/env.helper';
 import { LoggerModule }            from '@infrastructure/logger/logger.module';
 import { RepositoriesModule }      from '@infrastructure/repositories/repositories.module';
 
+import { DomainModule }  from '@domain/domain.module';
+
 import { UserModule }    from './module/user/user.module';
 import { AppController } from './app.controller';
-import { DomainModule }  from '@domain/domain.module';
 import { AppService }    from './app.service';
 
 const envFilePath: string = getEnvPath(`${ __dirname }/envs`);

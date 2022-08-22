@@ -1,10 +1,9 @@
-import { Module }         from '@nestjs/common';
-import { UserRepository } from '@domain/repository/user.repository';
+import { Module } from '@nestjs/common';
 
 @Module({
   imports: [],
   controllers: [],
-  providers: [UserRepository],
-  exports: [UserRepository],
+  providers: [],
+  exports: [],
 })
 export class DomainModule {}

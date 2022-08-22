@@ -2,9 +2,9 @@ import { Module }                   from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule }            from '@nestjs/typeorm';
 
-import { UserController } from './controller/user.controller';
-import { User }           from '@domain/entity/user.entity';
-import { UserService }    from './service/user.service';
+import { UserController } from './user.controller';
+import { User }        from '@domain/entity/user.entity';
+import { UserService } from './user.service';
 
 @Module({
   imports: [
