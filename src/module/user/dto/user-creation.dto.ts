@@ -7,9 +7,14 @@ export class UserCreationDto {
     description: 'User name',
     example: 'John Doe',
   })
+
   @IsString()
   @IsNotEmpty()
-  readonly name: string;
+  readonly firstName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  readonly lastName: string;
 
   @ApiProperty({
     description: 'User email',

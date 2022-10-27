@@ -1,24 +1,25 @@
-import { Module }                   from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { TypeOrmModule }            from '@nestjs/typeorm';
+import { Global, Module } from '@nestjs/common';
+import { TypeOrmModule }  from '@nestjs/typeorm';
 
+import { User }           from '@domain/entity/user.entity';
+import { AuthService }    from '../auth/auth.service';
 import { UserController } from './user.controller';
-import { User }        from '@domain/entity/user.entity';
-import { UserService } from './user.service';
+import { UserService }    from './user.service';
+import { JwtModule }      from '@nestjs/jwt';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    ClientsModule.register([{
-      name: 'AUTH_CLIENT',
-      transport: Transport.TCP,
-      options: {
-        host: 'localhost',
-        port: 4000
+    JwtModule.register(
+      {
+        secret: 'vissue-key',
+        signOptions: {expiresIn: '60s'}
       }
-    }])
+    )
   ],
-  providers: [UserService],
+  providers: [UserService, AuthService],
   controllers: [UserController],
+  exports: [UserService, TypeOrmModule.forFeature([User])]
 })
 export class UserModule {}

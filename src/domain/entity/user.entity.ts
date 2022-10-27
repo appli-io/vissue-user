@@ -1,34 +1,59 @@
 import { UserInterface } from '../interfaces/user.interface';
 
-import { hash }                                                                                             from 'bcrypt';
-import { IsEmail, Min }                                                                                                 from 'class-validator';
-import { BaseEntity, BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
+import { genSalt, hash }    from 'bcrypt';
+import {
+  IsEmail,
+  Min
+}                           from 'class-validator';
+import {
+  BaseEntity,
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+}                           from 'typeorm';
+import { AuthProviderEnum } from '@domain/enum/auth-provider.enum';
 
 @Entity('user')
-@Unique(['email'])
 export class User extends BaseEntity implements UserInterface {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   @Min(8)
   password: string;
 
-  @Column({nullable: false})
-  name: string;
+  @Index()
+  @Column({nullable: true})
+  firstName: string | null;
 
-  @Column({nullable: false})
+  @Index()
+  @Column({nullable: true})
+  lastName: string | null;
+
+  @Column({nullable: true, unique: true})
   @IsEmail()
-  email: string;
+  email: string | null;
+  @Column({default: AuthProviderEnum.EMAIL})
+  provider: string;
+  @Index()
+  @Column({nullable: true})
+  socialId: string | null;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    const salt = await genSalt();
+    this.password = await hash(this.password, salt);
+  }
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await hash(this.password, 10);
-  }
 }

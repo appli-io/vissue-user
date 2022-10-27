@@ -1,15 +1,24 @@
-import { NestFactory } from '@nestjs/core';
-import { Transport }   from '@nestjs/microservices';
-
-import { AllExceptionFilter } from '@infrastructure/common/filter/exceptions.filter';
-import { LoggerService }      from '@infrastructure/logger/logger.service';
-
-import { AppModule }                      from './app.module';
-import { ResponseInterceptor }            from '@infrastructure/common/interceptor/response.interceptor';
+import { NestFactory }                    from '@nestjs/core';
+import { Transport }                      from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe }                 from '@nestjs/common';
+
+import { AllExceptionFilter }  from '@infrastructure/common/filter/exceptions.filter';
+import { ResponseInterceptor } from '@infrastructure/common/interceptor/response.interceptor';
+import { LoggerService }       from '@infrastructure/logger/logger.service';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,                    // Ignorar datos que no esten en los DTO
+      forbidNonWhitelisted: true,         // Lanzar error si existen datos prohibidos
+      disableErrorMessages: true,         // Desabilitar mensajes de error (producción)
+    })
+  );
+
   app.useGlobalFilters(new AllExceptionFilter(new LoggerService()));
 
   app.useGlobalInterceptors(new ResponseInterceptor());
@@ -18,7 +27,7 @@ async function bootstrap() {
     transport: Transport.TCP,
     options: {
       host: 'localhost',
-      port: 4010
+      port: 4000
     }
   });
 
