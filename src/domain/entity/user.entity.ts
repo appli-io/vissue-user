@@ -38,8 +38,10 @@ export class User extends BaseEntity implements UserInterface {
   @Column({nullable: true, unique: true})
   @IsEmail()
   email: string | null;
+
   @Column({default: AuthProviderEnum.EMAIL})
   provider: string;
+
   @Index()
   @Column({nullable: true})
   socialId: string | null;

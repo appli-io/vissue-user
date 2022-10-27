@@ -51,9 +51,6 @@ export class UserController {
     );
   }
 
-  @Get('/paginate')
-
-
   @UseGuards(AuthGuard)
   @Get('greet')
   async greet(response: string): Promise<string> {

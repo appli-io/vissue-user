@@ -1,6 +1,6 @@
-import { Module }       from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { JwtModule }    from '@nestjs/jwt';
+import { Module }                      from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule }                   from '@nestjs/jwt';
 
 import { ExceptionsModule } from '@infrastructure/exceptions/exceptions.module';
 import { UserService }      from '../user/user.service';
@@ -13,10 +13,16 @@ import { LocalStrategy }    from './local.strategy';
   imports: [
     ConfigModule,
     ExceptionsModule,
-    JwtModule.register(
+    JwtModule.registerAsync(
       {
-        secret: 'vissue-key',
-        signOptions: {expiresIn: '60s'}
+        imports: [ConfigModule],
+        useFactory: async (configService: ConfigService) => {
+          return {
+            secret: configService.get<string>('auth.secret'),
+            signOptions: {expiresIn: configService.get<string>('auth.expiration')},
+          };
+        },
+        inject: [ConfigService]
       }
     )
   ],
