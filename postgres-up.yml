@@ -2,8 +2,7 @@
 version: '3.1'
 
 services:
-
-  db:
+  database:
     image: postgres
     restart: always
     ports:
@@ -11,4 +10,51 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: user-pass
-      POSTGRES_DB: ms-user
+      POSTGRES_DB: ms-user,
+    networks:
+      - ms-user-network
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: nest-rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - domain/envs/local.env
+  cache:
+    image: redis:latest
+    container_name: nest-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - ms-user-network
+  kong:
+    image: kong:latest
+    container_name: kong
+    restart: on-failure
+    command: "kong start"
+    volumes:
+      - ./kong/kong.yml:/usr/local/kong/declarative/kong.yml
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+      KONG_PROXY_LISTEN: 0.0.0.0:8080
+      KONG_PROXY_LISTEN_SSL: 0.0.0.0:8443
+      KONG_ADMIN_LISTEN: 0.0.0.0:9000
+    ports:
+      - "8080:8080"
+      - "9000:9000"
+    networks:
+      - ms-user-network
+networks:
+  ms-user-network:
+    driver: bridge
+volumes:
+  database:
+    driver: local
+  cache:
+    driver: local
